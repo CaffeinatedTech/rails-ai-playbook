@@ -23,7 +23,7 @@ This is the system I use to build Rails applications with OpenCode. It gives Ope
 | [hotwire.md](hotwire.md) | Hotwire (Turbo + Stimulus) + Tailwind v4 + frontend philosophy |
 | [solid-stack.md](solid-stack.md) | Solid Queue/Cache/Cable (single database) |
 | [stripe-payments.md](stripe-payments.md) | Stripe CLI workflow + Pay gem |
-| [heroku-deploy.md](heroku-deploy.md) | Deployment checklist + Procfile |
+| [coolify-deploy.md](coolify-deploy.md) | Deployment checklist + Docker config |
 
 ### Quality & Standards (copy to each project)
 | File | What It Does |
@@ -89,7 +89,7 @@ This playbook is opinionated. It assumes:
 
 | Layer | Technology |
 |-------|------------|
-| **Server** | Rails 8 + PostgreSQL |
+| **Server** | Rails 8 + SQLite |
 | **Frontend** | Hotwire (Turbo + Stimulus) |
 | **Styling** | Tailwind v4 |
 | **Auth** | Rails 8 sessions (+ optional OAuth) |
@@ -97,7 +97,7 @@ This playbook is opinionated. It assumes:
 | **Jobs** | Solid Queue (single DB) |
 | **Cache** | Solid Cache (single DB) |
 | **Email** | Resend (prod) / letter_opener (dev) |
-| **Hosting** | Heroku |
+| **Hosting** | Docker + Coolify |
 
 If your stack is different, the structural patterns (living docs, quality hooks, interview-first workflow) still apply — you'd just swap out the stack-specific guides.
 
@@ -121,7 +121,7 @@ The playbook is structured so you can swap pieces:
 
 - **Using Hotwire?** See `hotwire.md` for the standard patterns (Turbo + Stimulus + custom Tailwind components)
 - **Not using Stripe?** Remove `stripe-payments.md`, swap in your payment provider
-- **Not using Heroku?** Replace `heroku-deploy.md` with your deployment target
+- **Not using Coolify?** Replace `coolify-deploy.md` with your deployment target
 - **Not using Rails?** The quality principles, testing guidelines, interview workflow, and living docs pattern work with any framework
 
 The core value isn't the specific technologies — it's the system of structured documentation, automated enforcement, and interview-driven project setup.

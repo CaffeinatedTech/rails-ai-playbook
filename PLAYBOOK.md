@@ -20,7 +20,7 @@
 
 | Layer | Technology |
 |-------|------------|
-| **Server** | Rails 8 + PostgreSQL |
+| **Server** | Rails 8 + SQLite |
 | **Auth** | Rails 8 sessions + Google OAuth (optional) |
 | **Frontend** | Hotwire (Turbo + Stimulus) |
 | **Styling** | Tailwind v4 |
@@ -29,7 +29,7 @@
 | **Cache** | Solid Cache (single DB) |
 | **WebSockets** | Solid Cable (single DB) |
 | **Email** | Resend (prod) / letter_opener_web (dev) |
-| **Hosting** | Heroku |
+| **Hosting** | Docker + Coolify |
 
 ---
 
@@ -90,7 +90,7 @@ Use my template or set up manually following these docs:
 - [solid-stack.md](solid-stack.md) - Database + Solid* config
 - [stripe-payments.md](stripe-payments.md) - Payments setup
 - [hotwire.md](hotwire.md) - Frontend setup (Turbo + Stimulus)
-- [heroku-deploy.md](heroku-deploy.md) - Deployment config
+- [coolify-deploy.md](coolify-deploy.md) - Deployment config
 - [env-template.md](env-template.md) - Environment variables
 
 ### Step 4: Add Common Features
@@ -151,7 +151,7 @@ Use it for:
 | [solid-stack.md](solid-stack.md) | Single-database Solid Queue/Cache/Cable |
 | [stripe-payments.md](stripe-payments.md) | Stripe CLI workflow + Pay gem |
 | [hotwire.md](hotwire.md) | Turbo + Stimulus + custom Tailwind components + frontend philosophy |
-| [heroku-deploy.md](heroku-deploy.md) | Deployment checklist + Procfile |
+| [coolify-deploy.md](coolify-deploy.md) | Deployment checklist + Docker config |
 | [env-template.md](env-template.md) | Required environment variables |
 | [project-structure.md](project-structure.md) | Templates for project docs |
 | [code-quality.md](code-quality.md) | General code quality rules (copy to project docs/) |

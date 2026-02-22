@@ -6,7 +6,7 @@
 
 ## Overview
 
-Rails 8 includes Solid Queue, Solid Cache, and Solid Cable. By default, they want separate databases. **We use a single database** for simplicity on Heroku and smaller apps.
+Rails 8 includes Solid Queue, Solid Cache, and Solid Cable. By default, they want separate databases. **We use a single database** for simplicity and smaller apps.
 
 ---
 
@@ -252,21 +252,20 @@ Single database only - no separate queue/cache/cable databases:
 
 ```yaml
 default: &default
-  adapter: postgresql
-  encoding: unicode
+  adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
   <<: *default
-  database: <%= ENV.fetch("APP_NAME", "myapp") %>_development
+  database: db/development.sqlite3
 
 test:
   <<: *default
-  database: <%= ENV.fetch("APP_NAME", "myapp") %>_test
+  database: db/test.sqlite3
 
 production:
   <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
+  database: db/production.sqlite3
 ```
 
 ---
@@ -305,9 +304,6 @@ bin/rails jobs:work  # Should process the job
 
 ---
 
-## Heroku Considerations
+## Deployment
 
-- Single database = simpler, cheaper (one Postgres addon)
-- Works well for apps with moderate job/cache load
-- If you outgrow it, can migrate to separate databases later
-- Use `heroku run bin/rails db:migrate` for migrations
+See [coolify-deploy.md](coolify-deploy.md) for Docker + Coolify deployment instructions.

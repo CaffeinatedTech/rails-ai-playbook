@@ -16,10 +16,7 @@ APP_URL="http://localhost:3000"
 
 # ─────────────────────────────────────────────────────────────
 # Database
-# ─────────────────────────────────────────────────────────────
-# Development uses database.yml defaults
-# Production: set DATABASE_URL on Heroku (auto-set by addon)
-# DATABASE_URL=postgres://user:pass@host:5432/dbname
+# SQLite uses file-based storage (no DATABASE_URL needed)
 
 # ─────────────────────────────────────────────────────────────
 # Rails
@@ -113,17 +110,17 @@ end
    .env.local
    ```
 
-### Production (Heroku)
+### Production (Coolify)
 
 ```bash
-heroku config:set KEY=value
-heroku config:set STRIPE_SECRET_KEY=sk_live_XXX
+# Set environment variables in Coolify UI
+# App Settings → Environment Variables
 
 # View all config
-heroku config
+# Check Coolify dashboard
 
 # Remove a var
-heroku config:unset KEY
+# Delete from Coolify UI
 ```
 
 ---
@@ -201,7 +198,6 @@ REQUIRED_ENV_VARS = %w[
 REQUIRED_ENV_VARS_PRODUCTION = %w[
   STRIPE_WEBHOOK_SECRET
   RESEND_API_KEY
-  DATABASE_URL
 ]
 
 missing = REQUIRED_ENV_VARS.select { |var| ENV[var].blank? }

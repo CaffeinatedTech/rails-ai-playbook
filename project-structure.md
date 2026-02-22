@@ -52,14 +52,14 @@ my-app/
 
 | Layer | Technology |
 |-------|------------|
-| Server | Rails 8 + PostgreSQL |
+| Server | Rails 8 + SQLite |
 | Frontend | Hotwire (Turbo + Stimulus) |
 | Styling | Tailwind v4 |
 | Auth | Rails 8 sessions [+ Google OAuth] |
 | Payments | Stripe via Pay gem |
 | Jobs | Solid Queue |
 | Email | Resend (prod) / letter_opener (dev) |
-| Hosting | Heroku |
+| Hosting | Docker + Coolify |
 
 ---
 
@@ -136,8 +136,9 @@ For browser automation, enable built-in browser tools (see PLAYBOOK.md).
 
 - Ruby 3.3+
 - Node.js 20+
-- PostgreSQL 15+
-- Heroku CLI (for deployment)
+- SQLite (comes with macOS/Linux, or install via package manager)
+- Docker CLI
+- Coolify instance with private registry access
 - Stripe CLI (for webhook testing)
 
 ---
@@ -206,38 +207,30 @@ stripe trigger customer.subscription.created
 
 ## Deployment
 
-### Heroku
+### Docker + Coolify
 
-\`\`\`bash
-# Deploy
-git push heroku main
+See [coolify-deploy.md](../coolify-deploy.md) for full deployment guide.
 
-# Run migrations (auto via release phase)
-# Manual if needed:
-heroku run rails db:migrate
+```bash
+# Build and push to registry
+docker build -t my-registry.com/my-app:latest .
+docker push my-registry.com/my-app:latest
 
-# View logs
-heroku logs --tail
-\`\`\`
+# In Coolify: pull image and deploy
+```
 
 ### Environment Variables
 
-See `.env.example` for required vars. Set on Heroku:
-
-\`\`\`bash
-heroku config:set KEY=value
-\`\`\`
+Set these in Coolify's environment variables section. See `.env.example` for required vars.
 
 ---
 
 ## Useful Commands
 
-\`\`\`bash
+```bash
 bin/rails console          # Rails console
 bin/rails routes           # List routes
 bin/rails db:rollback      # Undo last migration
-heroku run rails console   # Production console
-\`\`\`
 ```
 
 ---
@@ -387,7 +380,7 @@ Ideas for future consideration:
 - [x] Rails 8 setup
 - [x] Auth (email + Google)
 - [x] Stripe payments
-- [x] Heroku deployment
+- [x] Docker + Coolify deployment
 ```
 
 ---
@@ -407,11 +400,11 @@ Ideas for future consideration:
 
 ## Tech Stack
 
-- Rails 8 + PostgreSQL
+- Rails 8 + SQLite
 - Hotwire (Turbo + Stimulus)
 - Tailwind v4
 - Stripe payments
-- Heroku hosting
+- Docker + Coolify hosting
 
 ## Getting Started
 
