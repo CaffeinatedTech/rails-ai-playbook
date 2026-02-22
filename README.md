@@ -1,8 +1,8 @@
 # Rails AI Playbook
 
-A structured playbook for building Rails apps with [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Opinionated setup, living documentation, and automated quality enforcement.
+A structured playbook for building Rails apps with [OpenCode](https://opencode.ai). Opinionated setup, living documentation, and automated quality enforcement.
 
-This is the system I use to build Rails applications with Claude Code. It gives Claude the context it needs to make good decisions — architecture patterns, code quality rules, testing principles, design system conventions — so I spend less time correcting and more time building.
+This is the system I use to build Rails applications with OpenCode. It gives OpenCode the context it needs to make good decisions — architecture patterns, code quality rules, testing principles, design system conventions — so I spend less time correcting and more time building.
 
 ---
 
@@ -11,8 +11,8 @@ This is the system I use to build Rails applications with Claude Code. It gives 
 ### Setup & Configuration
 | File | What It Does |
 |------|-------------|
-| [PLAYBOOK.md](PLAYBOOK.md) | Main playbook — Claude reads this when creating a new app |
-| [project-structure.md](project-structure.md) | Templates for CLAUDE.md and all project docs + creation checklist |
+| [PLAYBOOK.md](PLAYBOOK.md) | Main playbook — OpenCode reads this when creating a new app |
+| [project-structure.md](project-structure.md) | Templates for AGENTS.md and all project docs + creation checklist |
 | [brand-interview.md](brand-interview.md) | Questions to ask before building — feeds into DESIGN.md |
 | [env-template.md](env-template.md) | Environment variable patterns |
 
@@ -48,28 +48,28 @@ This is the system I use to build Rails applications with Claude Code. It gives 
 
 ### 1. Install
 
-Copy this playbook to your Claude Code config directory:
+Copy this playbook to your OpenCode config directory:
 
 ```bash
-git clone https://github.com/One-Man-App-Studio/rails-ai-playbook.git ~/.claude/rails-playbook
+git clone https://github.com/One-Man-App-Studio/rails-ai-playbook.git ~/.config/opencode/rails-playbook
 ```
 
-Then point your global `~/.claude/CLAUDE.md` at it:
+Then point your global `~/.config/opencode/AGENTS.md` at it:
 
 ```markdown
 ## Project Playbooks
 
-When creating a new **Rails app**, see: `~/.claude/rails-playbook/PLAYBOOK.md`
+When creating a new **Rails app**, see: `~/.config/opencode/rails-playbook/PLAYBOOK.md`
 ```
 
 ### 2. Create a New App
 
-Tell Claude you want to build something. It reads the playbook and:
+Tell OpenCode you want to build something. It reads the playbook and:
 
 1. **Interviews you** — project basics, domain model (entities, relationships, business rules), brand identity, technical requirements
 2. **Scaffolds project docs** — SCHEMA.md, BUSINESS_RULES.md, DESIGN.md, ARCHITECTURE.md, CODE_QUALITY.md, TESTING.md, and more
 3. **Generates the Rails app** — following the stack-specific guides as needed
-4. **Sets up quality hooks** — post-commit linting and design system enforcement
+4. **Configures formatters** — linters run automatically when saving files
 
 ### 3. Build Features
 
@@ -105,11 +105,11 @@ If your stack is different, the structural patterns (living docs, quality hooks,
 
 ## Key Ideas
 
-**Interview first.** Claude asks about your project before writing code. Domain model, business rules, brand identity, technical requirements. This conversation becomes the documentation that guides the entire build.
+**Interview first.** OpenCode asks about your project before writing code. Domain model, business rules, brand identity, technical requirements. This conversation becomes the documentation that guides the entire build.
 
-**Living documentation.** Docs aren't written once and forgotten. They start with general principles from the playbook and grow with project-specific rules as you build. Claude references them on every task.
+**Living documentation.** Docs aren't written once and forgotten. They start with general principles from the playbook and grow with project-specific rules as you build. OpenCode references them on every task.
 
-**Automated quality enforcement.** Post-commit hooks catch common violations — linting errors, hardcoded colors, raw HTML elements, unscoped database queries. Claude fixes issues before moving on.
+**Automated quality enforcement.** Configure linters and formatters in opencode.json to catch common violations — linting errors, style issues. OpenCode runs these automatically before saving files.
 
 **Business logic in services, always.** Controllers are thin (authorize, call service, render). Models are thin (validations, scopes, associations). Services are where the real work happens.
 
@@ -125,6 +125,56 @@ The playbook is structured so you can swap pieces:
 - **Not using Rails?** The quality principles, testing guidelines, interview workflow, and living docs pattern work with any framework
 
 The core value isn't the specific technologies — it's the system of structured documentation, automated enforcement, and interview-driven project setup.
+
+---
+
+## Additional Setup Requirements
+
+### Browser Automation (for logo generation, testing)
+
+OpenCode has built-in browser automation using Playwright. To enable:
+
+1. Add to your `opencode.json`:
+
+```json
+{
+  "browser": true
+}
+```
+
+Or set the environment variable:
+```bash
+export OPENCODE_ENABLE_BROWSER=true
+```
+
+2. Install Playwright browsers:
+```bash
+npx playwright install chromium
+```
+
+This enables 28+ browser automation tools including navigation, clicking, typing, screenshots, and more.
+
+### Persistent Memory (optional)
+
+For persistent memory across sessions, you can use [claude-mem-opencode](https://github.com/mc303/claude-mem-opencode). This is optional and requires additional setup:
+
+1. Install claude-mem v8.5.4 from GitHub (required for worker API):
+```bash
+git clone https://github.com/thedotmack/claude-mem.git
+cd claude-mem
+bun install
+bun run build
+bun link
+```
+
+2. Start the claude-mem worker:
+```bash
+claude-mem worker start
+```
+
+3. Use the claude-mem-opencode package in your OpenCode plugins.
+
+Note: This is an advanced feature with complex setup. Only install if you need persistent memory across sessions.
 
 ---
 

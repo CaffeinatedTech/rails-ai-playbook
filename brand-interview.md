@@ -4,7 +4,7 @@
 
 ---
 
-## Instructions for Claude
+## Instructions for OpenCode
 
 **Before writing any code for a new project:**
 
@@ -200,7 +200,7 @@ After the interview, create this file in the project:
 
 ## After Creating docs/DESIGN.md
 
-1. Add link to project's CLAUDE.md
+1. Add link to project's AGENTS.md
 2. Reference when building any UI component
 3. Update as design decisions evolve
 4. Use Tailwind `@theme` block to implement color tokens

@@ -1,6 +1,6 @@
 # Project Structure Templates
 
-> Templates for CLAUDE.md and docs/ folder when creating new projects.
+> Templates for AGENTS.md and docs/ folder when creating new projects.
 
 ---
 
@@ -10,10 +10,10 @@ Every new project should have:
 
 ```
 my-app/
-├── CLAUDE.md                    # Brief index, links to docs/
+├── AGENTS.md                    # Brief index, links to docs/
 ├── README.md                    # Project overview for humans
 ├── .env.example                 # Required ENV vars
-├── .claude/
+├── .opencode/
 │   └── hooks/
 │       └── post-commit-audit.sh # Quality enforcement (from playbook)
 └── docs/
@@ -29,10 +29,10 @@ my-app/
 
 ---
 
-## CLAUDE.md Template
+## AGENTS.md Template
 
 ```markdown
-# [App Name] - Claude Playbook
+# [App Name] - OpenCode Playbook
 
 > Instructions for working on this Rails + Inertia + Vite + Tailwind v4 project.
 
@@ -102,23 +102,24 @@ When building pages, components, or layouts, use the `/frontend-design` skill to
 
 ---
 
-## Available MCP Tools
+## Available MCP Servers
 
-Use these for research and validation:
+You can add MCP servers for additional capabilities via `opencode.json`:
 
-| MCP | Purpose |
-|-----|---------|
-| **Reddit (dialog-mcp)** | Community research, pain points, feature requests |
-| **Twitter/X** | Market sentiment, competitor mentions, trends |
-| **Exa** | Web search, company research, competitive analysis |
-| **Context7** | Up-to-date library documentation |
-| **Claude-Mem** | Persistent memory across sessions |
-
-### Usage
-- Research before building new features
-- Validate assumptions with real community data
-- Check latest docs before implementing libraries
+```json
+{
+  "mcp": {
+    "exa": {
+      "type": "remote",
+      "url": "https://mcp.exa.ai"
+    }
+  }
+}
 ```
+
+For persistent memory, see [claude-mem-opencode](https://github.com/mc303/claude-mem-opencode).
+
+For browser automation, enable built-in browser tools (see PLAYBOOK.md).
 
 ---
 
@@ -433,18 +434,16 @@ See [docs/PROJECT_SETUP.md](docs/PROJECT_SETUP.md) for setup instructions.
 
 When creating a new project:
 
-1. [ ] Create CLAUDE.md (brief, links to docs/)
+1. [ ] Create AGENTS.md (brief, links to docs/)
 2. [ ] Create README.md
 3. [ ] Create docs/ folder
 4. [ ] Create docs/SCHEMA.md (from domain model interview)
 5. [ ] Create docs/BUSINESS_RULES.md (from domain model interview)
 6. [ ] Create docs/DESIGN.md (from brand interview)
 7. [ ] Create docs/ARCHITECTURE.md
-8. [ ] Create docs/CODE_QUALITY.md (copy from `~/.claude/rails-playbook/code-quality.md`)
-9. [ ] Create docs/TESTING.md (copy from `~/.claude/rails-playbook/testing-guidelines.md`)
+8. [ ] Create docs/CODE_QUALITY.md (copy from `~/.config/opencode/rails-playbook/code-quality.md`)
+9. [ ] Create docs/TESTING.md (copy from `~/.config/opencode/rails-playbook/testing-guidelines.md`)
 10. [ ] Create docs/PROJECT_SETUP.md
 11. [ ] Create docs/ROADMAP.md
 12. [ ] Create .env.example
-13. [ ] Copy `.claude/hooks/post-commit-audit.sh` from playbook, customize design system checks
-14. [ ] Register hook in `.claude/settings.json` (see `~/.claude/rails-playbook/hooks/README.md`)
-15. [ ] Add all docs to .gitignore exclusion (should be committed)
+13. [ ] Create opencode.json with formatter and browser configuration

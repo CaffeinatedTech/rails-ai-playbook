@@ -22,7 +22,26 @@ Ask the user:
 
 ## Tool: Nano Banana (Browser)
 
-Use the Claude-in-Chrome browser automation to generate logos via Nano Banana:
+Use OpenCode's built-in browser automation to generate logos via Nano Banana:
+
+### Prerequisites
+
+1. Enable browser automation in `opencode.json`:
+```json
+{
+  "browser": true
+}
+```
+
+Or set environment variable:
+```bash
+export OPENCODE_ENABLE_BROWSER=true
+```
+
+2. Install Playwright browsers:
+```bash
+npx playwright install chromium
+```
 
 ### Steps
 

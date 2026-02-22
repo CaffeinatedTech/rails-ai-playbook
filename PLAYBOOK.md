@@ -8,7 +8,7 @@
 
 1. **Interview me first** - Ask about the project, brand, and requirements before writing code
 2. **Create project docs** - Set up `docs/` folder with DESIGN.md, CODE_QUALITY.md, TESTING.md, etc.
-3. **Keep CLAUDE.md clean** - Brief index that links to detailed docs
+3. **Keep AGENTS.md clean** - Brief index that links to detailed docs
 4. **Use .env files** - All secrets via `ENV["X"]`, never hardcode
 5. **Stripe CLI only** - Create products/prices via CLI, not dashboard
 6. **Single database** - Solid Queue/Cache/Cable all use primary DB
@@ -66,10 +66,10 @@ After the interview, generate:
 
 ```
 my-app/
-├── CLAUDE.md                    # Brief index (see project-structure.md)
+├── AGENTS.md                    # Brief index (see project-structure.md)
 ├── README.md                    # Project overview
 ├── .env.example                 # Required ENV vars
-├── .claude/
+├── .opencode/
 │   └── hooks/
 │       └── post-commit-audit.sh # Quality enforcement (from playbook)
 └── docs/
@@ -156,7 +156,7 @@ Use it for:
 | [project-structure.md](project-structure.md) | Templates for project docs |
 | [code-quality.md](code-quality.md) | General code quality rules (copy to project docs/) |
 | [testing-guidelines.md](testing-guidelines.md) | General testing principles (copy to project docs/) |
-| [hooks/](hooks/) | Post-commit quality hooks (copy to project .claude/hooks/) |
+| [hooks/](hooks/) | Quality enforcement reference (manual setup) |
 | [settings-page.md](settings-page.md) | User settings with profile, billing, notifications |
 | [contact-page.md](contact-page.md) | Contact form or mailto link setup |
 | [legal-pages.md](legal-pages.md) | Privacy Policy & Terms of Service templates |
