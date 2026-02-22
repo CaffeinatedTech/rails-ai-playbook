@@ -52,9 +52,10 @@
 
 ## Frontend
 
-- **Pages are thin.** Over 100 lines? Extract sub-components. Complex state? Extract a hook.
-- **Use the component library.** shadcn/ui for standard controls. Custom components only for domain-specific UI the library doesn't cover.
+- **Views are thin.** Over 100 lines? Extract partials. Complex logic? Move to service.
+- **Use custom Tailwind components.** Build your own reusable components in `app/components/`. Use ViewComponent for complex components.
 - **Design tokens, not hardcoded values.** Use semantic color/spacing tokens, never raw color codes or pixel values.
+- **Use standard Rails patterns.** Forms with `form_with`, links with `link_to`, Turbo Drive handles navigation automatically.
 
 ---
 

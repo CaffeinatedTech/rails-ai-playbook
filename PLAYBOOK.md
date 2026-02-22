@@ -22,8 +22,8 @@
 |-------|------------|
 | **Server** | Rails 8 + PostgreSQL |
 | **Auth** | Rails 8 sessions + Google OAuth (optional) |
-| **Frontend** | Inertia.js + React + Vite |
-| **Styling** | Tailwind v4 + shadcn/ui |
+| **Frontend** | Hotwire (Turbo + Stimulus) |
+| **Styling** | Tailwind v4 |
 | **Payments** | Stripe via Pay gem |
 | **Jobs** | Solid Queue (single DB) |
 | **Cache** | Solid Cache (single DB) |
@@ -89,7 +89,7 @@ Use my template or set up manually following these docs:
 - [auth.md](auth.md) - Rails 8 authentication + OmniAuth
 - [solid-stack.md](solid-stack.md) - Database + Solid* config
 - [stripe-payments.md](stripe-payments.md) - Payments setup
-- [inertia-react.md](inertia-react.md) - Frontend setup
+- [hotwire.md](hotwire.md) - Frontend setup (Turbo + Stimulus)
 - [heroku-deploy.md](heroku-deploy.md) - Deployment config
 - [env-template.md](env-template.md) - Environment variables
 
@@ -116,17 +116,17 @@ After the core app is running, add these as needed:
 - Public actions explicit: `allow_unauthenticated_access`
 - Use `ENV["X"]` for all configuration
 
-### Inertia + React
+### Hotwire (Turbo + Stimulus)
 
-- Pages in `app/frontend/pages/`
-- Components in `app/frontend/components/`
-- Internal links use `<Link href="..." />` (Inertia)
-- **Never hardcode routes** - use shared routes from `usePage().props.routes`
-- Prefer shadcn/ui components
+- Views in `app/views/`
+- Components in `app/components/`
+- Internal links use standard `<a href="...">` (Turbo Drive)
+- **Never hardcode routes** - use Rails route helpers
+- Build custom Tailwind components (no external UI library)
 
 ### Frontend Design
 
-When building pages, components, or layouts, use the `/frontend-design` skill to generate distinctive, production-grade UI. This avoids generic AI aesthetics and produces polished code using the project's design system (Tailwind v4 + shadcn/ui).
+When building pages, components, or layouts, use the `/frontend-design` skill to generate distinctive, production-grade UI. This avoids generic AI aesthetics and produces polished code using the project's design system (Tailwind v4 + custom components).
 
 Use it for:
 - New pages (landing, dashboard, settings, etc.)
@@ -150,7 +150,7 @@ Use it for:
 | [brand-interview.md](brand-interview.md) | Questions to ask about design/identity |
 | [solid-stack.md](solid-stack.md) | Single-database Solid Queue/Cache/Cable |
 | [stripe-payments.md](stripe-payments.md) | Stripe CLI workflow + Pay gem |
-| [inertia-react.md](inertia-react.md) | Vite + React + shadcn + inertia_share + frontend philosophy |
+| [hotwire.md](hotwire.md) | Turbo + Stimulus + custom Tailwind components + frontend philosophy |
 | [heroku-deploy.md](heroku-deploy.md) | Deployment checklist + Procfile |
 | [env-template.md](env-template.md) | Required environment variables |
 | [project-structure.md](project-structure.md) | Templates for project docs |
@@ -183,8 +183,8 @@ See [testing-guidelines.md](testing-guidelines.md) for full principles. Quick re
 Before completing any task:
 
 - [ ] Tests added/updated, `bin/rails test` passes
-- [ ] Inertia `<Link/>` for internal navigation
-- [ ] shadcn/ui for controls & cards
+- [ ] Standard `<a>` links for internal navigation (Turbo Drive)
+- [ ] Custom Tailwind components for controls & cards
 - [ ] Tailwind v4 tokens (not hardcoded colors)
 - [ ] No secrets in code (use ENV)
 - [ ] Public endpoints have `allow_unauthenticated_access`

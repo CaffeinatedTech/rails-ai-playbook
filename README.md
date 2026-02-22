@@ -20,7 +20,7 @@ This is the system I use to build Rails applications with OpenCode. It gives Ope
 | File | What It Does |
 |------|-------------|
 | [auth.md](auth.md) | Rails 8 authentication + OmniAuth |
-| [inertia-react.md](inertia-react.md) | Inertia + React + Vite + shadcn/ui + frontend philosophy |
+| [hotwire.md](hotwire.md) | Hotwire (Turbo + Stimulus) + Tailwind v4 + frontend philosophy |
 | [solid-stack.md](solid-stack.md) | Solid Queue/Cache/Cable (single database) |
 | [stripe-payments.md](stripe-payments.md) | Stripe CLI workflow + Pay gem |
 | [heroku-deploy.md](heroku-deploy.md) | Deployment checklist + Procfile |
@@ -90,8 +90,8 @@ This playbook is opinionated. It assumes:
 | Layer | Technology |
 |-------|------------|
 | **Server** | Rails 8 + PostgreSQL |
-| **Frontend** | Inertia.js + React + Vite |
-| **Styling** | Tailwind v4 + shadcn/ui |
+| **Frontend** | Hotwire (Turbo + Stimulus) |
+| **Styling** | Tailwind v4 |
 | **Auth** | Rails 8 sessions (+ optional OAuth) |
 | **Payments** | Stripe via Pay gem |
 | **Jobs** | Solid Queue (single DB) |
@@ -119,7 +119,7 @@ If your stack is different, the structural patterns (living docs, quality hooks,
 
 The playbook is structured so you can swap pieces:
 
-- **Not using Inertia?** Replace `inertia-react.md` with your frontend patterns (Hotwire, API+SPA, etc.)
+- **Using Hotwire?** See `hotwire.md` for the standard patterns (Turbo + Stimulus + custom Tailwind components)
 - **Not using Stripe?** Remove `stripe-payments.md`, swap in your payment provider
 - **Not using Heroku?** Replace `heroku-deploy.md` with your deployment target
 - **Not using Rails?** The quality principles, testing guidelines, interview workflow, and living docs pattern work with any framework

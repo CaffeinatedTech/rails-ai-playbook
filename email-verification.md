@@ -76,7 +76,6 @@ class PasswordsController < ApplicationController
   before_action :set_user_by_token, only: %i[edit update]
 
   def new
-    render inertia: "Auth/ForgotPassword"
   end
 
   def create
@@ -88,7 +87,8 @@ class PasswordsController < ApplicationController
   end
 
   def edit
-    render inertia: "Auth/ResetPassword", props: { token: params[:token] }
+    @user = User.find_by_token_for(:password_reset, params[:token])
+    redirect_to new_password_path, alert: "Invalid or expired link" unless @user
   end
 
   def update
@@ -189,108 +189,54 @@ end
 </html>
 ```
 
-### React Pages
+### ERB Views
 
-```jsx
-// app/frontend/pages/Auth/ForgotPassword.jsx
-import { Head, useForm } from "@inertiajs/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+```erb
+<!-- app/views/passwords/new.html.erb -->
+<% content_for :title, "Forgot Password" %>
 
-export default function ForgotPassword() {
-  const { data, setData, post, processing } = useForm({ email: "" })
+<div class="max-w-md mx-auto py-12 px-4">
+  <h1 class="text-2xl font-bold mb-6">Forgot your password?</h1>
+  <p class="text-muted-foreground mb-6">
+    Enter your email and we'll send you a reset link.
+  </p>
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    post("/passwords")
-  }
-
-  return (
-    <>
-      <Head title="Forgot Password" />
-
-      <div className="max-w-md mx-auto py-12 px-4">
-        <h1 className="text-2xl font-bold mb-6">Forgot your password?</h1>
-        <p className="text-muted-foreground mb-6">
-          Enter your email and we'll send you a reset link.
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={data.email}
-              onChange={(e) => setData("email", e.target.value)}
-              required
-            />
-          </div>
-          <Button type="submit" disabled={processing} className="w-full">
-            Send Reset Link
-          </Button>
-        </form>
-      </div>
-    </>
-  )
-}
+  <%= form_with url: passwords_path, data: { turbo_stream: true }, 
+        class: "space-y-4" do |form| %>
+    <div class="space-y-2">
+      <%= form.label :email, class: "text-sm font-medium leading-none" %>
+      <%= form.email_field :email, required: true,
+            class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+    </div>
+    <%= form.submit "Send Reset Link",
+          class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full" %>
+  <% end %>
+</div>
 ```
 
-```jsx
-// app/frontend/pages/Auth/ResetPassword.jsx
-import { Head, useForm } from "@inertiajs/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+```erb
+<!-- app/views/passwords/edit.html.erb -->
+<% content_for :title, "Reset Password" %>
 
-export default function ResetPassword({ token }) {
-  const { data, setData, patch, processing, errors } = useForm({
-    password: "",
-    password_confirmation: "",
-  })
+<div class="max-w-md mx-auto py-12 px-4">
+  <h1 class="text-2xl font-bold mb-6">Set a new password</h1>
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    patch(`/passwords/${token}`)
-  }
-
-  return (
-    <>
-      <Head title="Reset Password" />
-
-      <div className="max-w-md mx-auto py-12 px-4">
-        <h1 className="text-2xl font-bold mb-6">Set a new password</h1>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="password">New Password</Label>
-            <Input
-              id="password"
-              type="password"
-              value={data.password}
-              onChange={(e) => setData("password", e.target.value)}
-              required
-            />
-          </div>
-          <div>
-            <Label htmlFor="password_confirmation">Confirm Password</Label>
-            <Input
-              id="password_confirmation"
-              type="password"
-              value={data.password_confirmation}
-              onChange={(e) => setData("password_confirmation", e.target.value)}
-              required
-            />
-          </div>
-          <Button type="submit" disabled={processing} className="w-full">
-            Update Password
-          </Button>
-        </form>
-      </div>
-    </>
-  )
-}
+  <%= form_with url: password_path(@user), method: :patch,
+        data: { turbo_stream: true }, class: "space-y-4" do |form| %>
+    <div class="space-y-2">
+      <%= form.label :password, "New Password", class: "text-sm font-medium leading-none" %>
+      <%= form.password_field :password, required: true,
+            class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+    </div>
+    <div class="space-y-2">
+      <%= form.label :password_confirmation, "Confirm Password", class: "text-sm font-medium leading-none" %>
+      <%= form.password_field :password_confirmation, required: true,
+            class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+    </div>
+    <%= form.submit "Update Password",
+          class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full" %>
+  <% end %>
+</div>
 ```
 
 ---

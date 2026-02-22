@@ -34,7 +34,7 @@ my-app/
 ```markdown
 # [App Name] - OpenCode Playbook
 
-> Instructions for working on this Rails + Inertia + Vite + Tailwind v4 project.
+> Instructions for working on this Rails + Hotwire + Tailwind v4 project.
 
 **Project Docs:**
 - [Schema](docs/SCHEMA.md) - Every table, column, relationship, and index
@@ -53,8 +53,8 @@ my-app/
 | Layer | Technology |
 |-------|------------|
 | Server | Rails 8 + PostgreSQL |
-| Frontend | Inertia + React + Vite |
-| Styling | Tailwind v4 + shadcn/ui |
+| Frontend | Hotwire (Turbo + Stimulus) |
+| Styling | Tailwind v4 |
 | Auth | Rails 8 sessions [+ Google OAuth] |
 | Payments | Stripe via Pay gem |
 | Jobs | Solid Queue |
@@ -73,22 +73,22 @@ bin/rails console    # Rails console
 \`\`\`
 
 ### Key Paths
-- Pages: `app/frontend/pages/`
-- Components: `app/frontend/components/`
+- Pages: `app/views/pages/`
+- Components: `app/components/`
 - Services: `app/services/`
-- Styles: `app/frontend/entrypoints/application.css`
+- Styles: `app/assets/stylesheets/application.css`
 
 ### Conventions
-- Internal links: `<Link href={routes.X} />` (Inertia)
-- Routes: Always use shared routes from `usePage().props.routes`
-- Icons: Lucide React only
-- Components: shadcn/ui
+- Internal links: Standard `<a href="...">` (Turbo Drive)
+- Routes: Always use Rails route helpers
+- Icons: Inline SVG via helper
+- Components: Custom Tailwind components (build your own)
 - Colors: Tailwind v4 tokens (`bg-background`, not `bg-white`)
 - Business logic: Always in `app/services/`, never in controllers or models
 - Timestamps: Stored UTC, displayed in user's timezone via `Time.use_zone`
 
 ### Frontend Design
-When building pages, components, or layouts, use the `/frontend-design` skill to generate distinctive, production-grade UI. Avoids generic AI aesthetics and uses the project's design system (Tailwind v4 + shadcn/ui).
+When building pages, components, or layouts, use the `/frontend-design` skill to generate distinctive, production-grade UI. Avoids generic AI aesthetics and uses the project's design system (Tailwind v4 + custom components).
 
 ---
 
@@ -408,8 +408,8 @@ Ideas for future consideration:
 ## Tech Stack
 
 - Rails 8 + PostgreSQL
-- Inertia + React + Vite
-- Tailwind v4 + shadcn/ui
+- Hotwire (Turbo + Stimulus)
+- Tailwind v4
 - Stripe payments
 - Heroku hosting
 

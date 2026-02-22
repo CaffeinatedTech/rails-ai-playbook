@@ -97,7 +97,7 @@ After verification:
 ```erb
 <!-- app/views/layouts/application.html.erb -->
 <head>
-  <%# Default SEO meta tags - overridden by Inertia Head per page %>
+  <%# Default SEO meta tags - overridden by content_for :head per page %>
   <meta name="description" content="[DEFAULT_DESCRIPTION]">
   <meta name="keywords" content="[keyword1], [keyword2], [keyword3]">
   <meta name="author" content="[APP_NAME]">
@@ -119,24 +119,18 @@ After verification:
 </head>
 ```
 
-### Per-Page Meta Tags (Inertia)
+### Per-Page Meta Tags (ERB)
 
-```jsx
-// In any page component
-import { Head } from "@inertiajs/react"
+```erb
+<!-- In any view -->
+<% content_for :head do %>
+  <title><%= @idea.name %> | AppName</title>
+  <meta name="description" content="<%= @idea.one_liner %>">
+  <meta property="og:title" content="<%= @idea.name %>">
+  <meta property="og:description" content="<%= @idea.one_liner %>">
+<% end %>
 
-export default function IdeaShow({ idea }) {
-  return (
-    <>
-      <Head>
-        <title>{idea.name} | AppName</title>
-        <meta name="description" content={idea.one_liner} />
-        <meta property="og:title" content={idea.name} />
-        <meta property="og:description" content={idea.one_liner} />
-      </Head>
-
-      {/* Page content */}
-    </>
+<!-- Page content -->
   )
 }
 ```

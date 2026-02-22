@@ -1,6 +1,6 @@
 # Settings Page
 
-> User account settings pattern for Rails + Inertia apps.
+> User account settings pattern for Rails + Hotwire apps.
 
 ---
 
@@ -40,11 +40,9 @@ class SettingsController < ApplicationController
   before_action :authenticate_user!
 
   def show
-    render inertia: "Settings/Show", props: {
-      user: current_user.as_json(only: [:id, :name, :email, :created_at]),
-      subscription: subscription_props,
-      connected_accounts: connected_accounts_props
-    }
+    @user = current_user
+    @subscription = subscription_props
+    @connected_accounts = connected_accounts_props
   end
 
   def update
@@ -109,142 +107,89 @@ resource :settings, only: [:show, :update] do
 end
 ```
 
-### React Page
+### ERB View
 
-```jsx
-// app/frontend/pages/Settings/Show.jsx
-import { Head, useForm, usePage } from "@inertiajs/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+```erb
+<!-- app/views/settings/show.html.erb -->
+<% content_for :title, "Settings" %>
 
-export default function SettingsShow() {
-  const { user, subscription, flash } = usePage().props
+<div class="max-w-2xl mx-auto py-8 px-4 space-y-6">
+  <h1 class="text-2xl font-bold">Settings</h1>
 
-  const profileForm = useForm({
-    name: user.name || "",
-    email: user.email || "",
-  })
+  <!-- Profile Section -->
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div class="flex flex-col space-y-1.5 p-6">
+      <h3 class="text-2xl font-semibold leading-none tracking-tight">Profile</h3>
+      <p class="text-sm text-muted-foreground">Update your account information</p>
+    </div>
+    <div class="p-6 pt-0">
+      <%= form_with model: @user, url: settings_path, 
+            data: { turbo_stream: true }, class: "space-y-4" do |form| %>
+        <div class="space-y-2">
+          <%= form.label :name, class: "text-sm font-medium leading-none" %>
+          <%= form.text_field :name, class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+        </div>
+        <div class="space-y-2">
+          <%= form.label :email, class: "text-sm font-medium leading-none" %>
+          <%= form.email_field :email, class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+        </div>
+        <%= form.submit "Save Changes", class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" %>
+      <% end %>
+    </div>
+  </div>
 
-  const passwordForm = useForm({
-    password: "",
-    password_confirmation: "",
-  })
+  <!-- Password Section -->
+  <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+    <div class="flex flex-col space-y-1.5 p-6">
+      <h3 class="text-2xl font-semibold leading-none tracking-tight">Password</h3>
+      <p class="text-sm text-muted-foreground">Change your password</p>
+    </div>
+    <div class="p-6 pt-0">
+      <%= form_with url: update_password_settings_path, 
+            data: { turbo_stream: true }, class: "space-y-4" do |form| %>
+        <div class="space-y-2">
+          <%= form.label :password, "New Password", class: "text-sm font-medium leading-none" %>
+          <%= form.password_field :password, class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+        </div>
+        <div class="space-y-2">
+          <%= form.label :password_confirmation, "Confirm Password", class: "text-sm font-medium leading-none" %>
+          <%= form.password_field :password_confirmation, class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+        </div>
+        <%= form.submit "Update Password", class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" %>
+      <% end %>
+    </div>
+  </div>
 
-  const handleProfileSubmit = (e) => {
-    e.preventDefault()
-    profileForm.patch("/settings")
-  }
-
-  const handlePasswordSubmit = (e) => {
-    e.preventDefault()
-    passwordForm.patch("/settings/update_password", {
-      onSuccess: () => passwordForm.reset()
-    })
-  }
-
-  return (
-    <>
-      <Head title="Settings" />
-
-      <div className="max-w-2xl mx-auto py-8 px-4 space-y-6">
-        <h1 className="text-2xl font-bold">Settings</h1>
-
-        {/* Profile Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Profile</CardTitle>
-            <CardDescription>Update your account information</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleProfileSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="name">Name</Label>
-                <Input
-                  id="name"
-                  value={profileForm.data.name}
-                  onChange={(e) => profileForm.setData("name", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={profileForm.data.email}
-                  onChange={(e) => profileForm.setData("email", e.target.value)}
-                />
-              </div>
-              <Button type="submit" disabled={profileForm.processing}>
-                Save Changes
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Password Section */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Password</CardTitle>
-            <CardDescription>Change your password</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <Label htmlFor="password">New Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={passwordForm.data.password}
-                  onChange={(e) => passwordForm.setData("password", e.target.value)}
-                />
-              </div>
-              <div>
-                <Label htmlFor="password_confirmation">Confirm Password</Label>
-                <Input
-                  id="password_confirmation"
-                  type="password"
-                  value={passwordForm.data.password_confirmation}
-                  onChange={(e) => passwordForm.setData("password_confirmation", e.target.value)}
-                />
-              </div>
-              <Button type="submit" disabled={passwordForm.processing}>
-                Update Password
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-
-        {/* Subscription Section (if applicable) */}
-        {subscription && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Subscription</CardTitle>
-              <CardDescription>Manage your subscription</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <p>Current plan: <strong>{subscription.plan}</strong></p>
-              <p>Status: {subscription.status}</p>
-              {/* Add billing portal link via Stripe */}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Danger Zone */}
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="text-destructive">Danger Zone</CardTitle>
-            <CardDescription>Irreversible actions</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="destructive">Delete Account</Button>
-          </CardContent>
-        </Card>
+  <!-- Subscription Section -->
+  <% if @subscription %>
+    <div class="rounded-lg border bg-card text-card-foreground shadow-sm">
+      <div class="flex flex-col space-y-1.5 p-6">
+        <h3 class="text-2xl font-semibold leading-none tracking-tight">Subscription</h3>
+        <p class="text-sm text-muted-foreground">Manage your subscription</p>
       </div>
-    </>
-  )
-}
+      <div class="p-6 pt-0">
+        <p>Current plan: <strong><%= @subscription[:plan] %></strong></p>
+        <p>Status: <%= @subscription[:status] %></p>
+        <%= link_to "Manage Subscription", billing_portal_path, 
+              class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 mt-4" %>
+      </div>
+    </div>
+  <% end %>
+
+  <!-- Danger Zone -->
+  <div class="rounded-lg border border-destructive bg-card text-card-foreground shadow-sm">
+    <div class="flex flex-col space-y-1.5 p-6">
+      <h3 class="text-2xl font-semibold leading-none tracking-tight text-destructive">Danger Zone</h3>
+      <p class="text-sm text-muted-foreground">Irreversible actions</p>
+    </div>
+    <div class="p-6 pt-0">
+      <%= button_to "Delete Account", settings_path, 
+            method: :delete,
+            data: { turbo_confirm: "Are you sure? This cannot be undone." },
+            class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-destructive text-destructive-foreground hover:bg-destructive/90 h-10 px-4 py-2" %>
+    </div>
+  </div>
+</div>
 ```
 
 ---

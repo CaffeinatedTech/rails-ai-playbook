@@ -10,7 +10,7 @@
 | Layer | Tool | Purpose | Volume |
 |-------|------|---------|--------|
 | **Services + Models** | Minitest | Business logic, validations, scopes | Heavy |
-| **Controllers** | Minitest + Inertia helpers | Authorization, correct component/props | Heavy |
+| **Controllers** | Minitest + Turbo system tests | Authorization, correct view rendering | Heavy |
 | **E2E (System)** | Capybara + Playwright | Critical happy paths in a real browser | Light |
 
 **Test at the lowest possible layer.** If you can verify it in a service test, don't write a controller test. If you can verify it in a controller test, don't write a browser test. Higher layers are slower, flakier, and harder to debug.

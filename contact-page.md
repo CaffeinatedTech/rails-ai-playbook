@@ -48,14 +48,14 @@ class ContactController < ApplicationController
   allow_unauthenticated_access
 
   def new
-    render inertia: "Contact/New"
+    @contact = Contact.new
   end
 
   def create
     ContactMailer.inquiry(
-      name: params[:name],
-      email: params[:email],
-      message: params[:message]
+      name: params[:contact][:name],
+      email: params[:contact][:email],
+      message: params[:contact][:message]
     ).deliver_later
 
     redirect_to root_path, notice: "Message sent! We'll get back to you soon."
@@ -101,76 +101,39 @@ end
 resources :contact, only: [:new, :create]
 ```
 
-### React Page
+### ERB View
 
-```jsx
-// app/frontend/pages/Contact/New.jsx
-import { Head, useForm } from "@inertiajs/react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
+```erb
+<!-- app/views/contact/new.html.erb -->
+<% content_for :title, "Contact Us" %>
 
-export default function ContactNew() {
-  const { data, setData, post, processing, errors } = useForm({
-    name: "",
-    email: "",
-    message: "",
-  })
+<div class="max-w-lg mx-auto py-12 px-4">
+  <h1 class="text-2xl font-bold mb-6">Contact Us</h1>
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    post("/contact")
-  }
+  <%= form_with model: @contact, url: contact_index_path, 
+        data: { turbo_stream: true }, class: "space-y-4" do |form| %>
+    <div class="space-y-2">
+      <%= form.label :name, class: "text-sm font-medium leading-none" %>
+      <%= form.text_field :name, required: true,
+            class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+    </div>
 
-  return (
-    <>
-      <Head title="Contact Us" />
+    <div class="space-y-2">
+      <%= form.label :email, class: "text-sm font-medium leading-none" %>
+      <%= form.email_field :email, required: true,
+            class: "flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+    </div>
 
-      <div className="max-w-lg mx-auto py-12 px-4">
-        <h1 className="text-2xl font-bold mb-6">Contact Us</h1>
+    <div class="space-y-2">
+      <%= form.label :message, class: "text-sm font-medium leading-none" %>
+      <%= form.text_area :message, rows: 5, required: true,
+            class: "flex w-full rounded-md border bg-background px-3 py-2 text-sm" %>
+    </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <Label htmlFor="name">Name</Label>
-            <Input
-              id="name"
-              value={data.name}
-              onChange={(e) => setData("name", e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              value={data.email}
-              onChange={(e) => setData("email", e.target.value)}
-              required
-            />
-          </div>
-
-          <div>
-            <Label htmlFor="message">Message</Label>
-            <Textarea
-              id="message"
-              rows={5}
-              value={data.message}
-              onChange={(e) => setData("message", e.target.value)}
-              required
-            />
-          </div>
-
-          <Button type="submit" disabled={processing}>
-            Send Message
-          </Button>
-        </form>
-      </div>
-    </>
-  )
-}
+    <%= form.submit "Send Message",
+          class: "inline-flex items-center justify-center rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2" %>
+  <% end %>
+</div>
 ```
 
 ---
@@ -179,13 +142,12 @@ export default function ContactNew() {
 
 Many apps just put a support email in the footer:
 
-```jsx
-// In Footer component
-<p className="text-sm text-muted-foreground">
-  Questions? Email us at{" "}
-  <a href="mailto:support@yourapp.com" className="underline">
-    support@yourapp.com
-  </a>
+```erb
+<!-- In Footer partial -->
+<p class="text-sm text-muted-foreground">
+  Questions? Email us at
+  <%= mail_to "support@yourapp.com", "support@yourapp.com", 
+        class: "underline hover:text-foreground" %>
 </p>
 ```
 
@@ -201,15 +163,11 @@ If using a form, consider:
 
 Simple honeypot:
 
-```jsx
-{/* Hidden field - bots will fill this */}
-<input
-  type="text"
-  name="website"
-  className="hidden"
-  tabIndex={-1}
-  autoComplete="off"
-/>
+```erb
+<!-- Hidden field - bots will fill this -->
+<div style="display: none;">
+  <%= text_field_tag :website, nil, tabindex: -1, autocomplete: "off" %>
+</div>
 ```
 
 ```ruby
